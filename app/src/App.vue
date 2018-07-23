@@ -138,7 +138,9 @@ export default {
   background-color: white;
 }
 .logo {
-  width: 100%;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 .v-footer, .v-navigation-drawer {
   width: 200px !important;
