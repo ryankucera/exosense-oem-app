@@ -133,6 +133,7 @@ export default {
           this.snackbarText = response.data.error
           this.claimDeviceDialog = false
         } else {
+          this.claimCode = ''
           this.snackbar = true
           this.snackbarColor = 'success'
           this.snackbarText = 'Claimed device successfully'
