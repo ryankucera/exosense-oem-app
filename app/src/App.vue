@@ -132,7 +132,7 @@ export default {
 
 <style>
 .app {
-  background-color: #101420 !important;
+  background-color: #222736 !important;
 }
 .content {
   background-color: white;
@@ -142,7 +142,7 @@ export default {
 }
 .v-footer, .v-navigation-drawer {
   width: 200px !important;
-  background-color: #101420 !important;
+  background-color: #222736 !important;
 }
 .active-link {
   color: #2C9DB6 !important;

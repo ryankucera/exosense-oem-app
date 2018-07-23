@@ -120,7 +120,7 @@ export default {
 
 <style>
 .login-container {
-  background-color: #101420 !important;
+  background-color: #222736 !important;
   height: 100%;
   width: 100vw !important;
 }
