@@ -1,0 +1,199 @@
+<template>
+  <v-container fluid>
+    <v-slide-y-transition mode="out-in">
+      <v-layout row>
+        <v-flex xs6>
+          <v-list two-line subheader>
+            <v-subheader>Your devices</v-subheader>
+            <v-list-tile
+              v-for="item in yourDevices"
+              :key="item.identity"
+              avatar
+              @click="selectedDevice=item"
+            >
+              <v-list-tile-avatar>
+                <v-icon>router</v-icon>
+              </v-list-tile-avatar>
+
+              <v-list-tile-content>
+                <v-list-tile-title>{{ item.identity }}</v-list-tile-title>
+                <v-list-tile-sub-title>{{ item.meta.claimed ? 'Claimed' : 'Unclaimed' }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+
+              <v-list-tile-action @click.stop>
+                <v-menu offset-y>
+                  <v-btn icon ripple slot="activator">
+                    <v-icon color="grey lighten-1">more_vert</v-icon>
+                  </v-btn>
+                  <v-list>
+                    <v-list-tile href="javascript:;" v-if="item.meta.claimed" @click="item.unclaim()">
+                      <v-list-tile-title>Unclaim</v-list-tile-title>
+                    </v-list-tile>
+                    <!-- <v-list-tile href="javascript:;" @click="item.del()">
+                      <v-list-tile-title>Delete</v-list-tile-title>
+                    </v-list-tile> -->
+                  </v-list>
+                </v-menu>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-divider />
+            <v-subheader>Unclaimed devices</v-subheader>
+            <v-list-tile
+              v-for="item in unclaimedDevices"
+              :key="item.identity"
+              avatar
+              @click="selectedDevice=item"
+            >
+              <v-list-tile-avatar>
+                <v-icon>router</v-icon>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title>{{ item.identity }}</v-list-tile-title>
+                <v-list-tile-sub-title>{{ item.meta.claimed ? 'Claimed' : 'Unclaimed' }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+              <v-list-tile-action @click.stop>
+                <v-menu offset-y>
+                  <v-btn icon ripple slot="activator">
+                    <v-icon color="grey lighten-1">more_vert</v-icon>
+                  </v-btn>
+                  <v-list>
+                    <v-list-tile href="javascript:;" v-if="!item.meta.claimed" @click="claimingDevice=item;claimDeviceDialog=true">
+                      <v-list-tile-title>Claim</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-divider />
+          </v-list>
+        </v-flex>
+        <v-flex xs6>
+          <DeviceDetail :device="selectedDevice" />
+        </v-flex>
+      </v-layout>
+    </v-slide-y-transition>
+
+    <v-dialog v-model="claimDeviceDialog" max-width="500">
+      <v-card>
+        <v-card-title class="headline">Claim Device {{ claimingDevice.identity }}?</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="claimCode" label="Claim Code" />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click.native="claimDeviceDialog = false">Cancel</v-btn>
+          <v-btn color="primary" flat @click.native="claimDevice()">Claim</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-snackbar
+      v-model="snackbar"
+      :color="snackbarColor"
+    >
+      {{ snackbarText }}
+      <v-btn
+        dark
+        flat
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+
+  </v-container>
+</template>
+
+<script>
+import axios from '@/axios'
+import { auth } from '@/Auth'
+import DeviceDetail from '@/components/DeviceDetail'
+import Device from '@/device'
+
+export default {
+  components: {
+    DeviceDetail,
+  },
+  data () {
+    return {
+      authenticated: auth.authenticated,
+      selectedDevice: false,
+      devices: [],
+      loading: false,
+
+      claimDeviceDialog: false,
+      claimingDevice: {},
+      claimCode: "",
+      snackbar: false,
+      snackbarText: '',
+      snackbarColor: ''
+    }
+  },
+  methods: {
+    fetchDevices() {
+      this.loading = true
+      axios.get('/devices')
+        .then(response => {
+          this.loading = false
+          console.log({ response })
+          this.devices = response.data.map(device => {
+            Object.assign(device, { $socket: this.$socket, $options: this.$options, $set: this.$set })
+            const d = new Device(device)
+            d.subscribe()
+            return d
+          })
+        })
+    },
+    claimDevice() {
+      const url = `/devices/claim`
+      return axios.post(url, { claimCode: this.claimCode }).then(response => {
+        console.log({ response })
+        this.snackbar = true
+        this.snackbarColor = 'success'
+        this.snackbarText = 'Claimed device successfully'
+        this.claimDeviceDialog = false
+        this.fetchDevices()
+      }).catch(err => {
+        this.snackbar = true
+        this.snackbarColor = 'error'
+        this.snackbarText = 'Incorrect claim code'
+        this.claimDeviceDialog = false
+      })
+    }
+  },
+  computed: {
+    yourDevices () {
+      return _.filter(this.devices, device => device.meta.claimedBy === this.profile.id.toString())
+    },
+    unclaimedDevices() {
+      return _.filter(this.devices, device => !device.meta || !device.meta.claimed)
+    },
+    profile() {
+      return auth.profile() || {}
+    }
+  },
+  mounted () {
+    this.fetchDevices()
+  },
+  watch: {
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+h1, h2 {
+  font-weight: normal;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+</style>

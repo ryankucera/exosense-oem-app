@@ -1,0 +1,34 @@
+---
+info:
+  name: ExosenseOEM
+  summary: One line summary of
+  description: |
+    In depth description of
+
+    With lots of details.
+  authors:
+    - 'exosite'
+  version: 1.0.0
+
+routes:
+  location: routes
+  include: ['*.lua']
+  exclude: ['*_test.lua', '*_spec.lua', '**/.*']
+assets:
+  location: app/dist
+  include: '**/*'
+  exclude: []
+  default_page: index.html
+modules:
+  location: modules
+  include: ['./*.lua', './src/*.lua']
+  exclude: ['*_test.lua', '*_spec.lua', '**test*.lua', '.*']
+services:
+  location: services
+  include: ['*.lua']
+  exclude: ['*_test.lua', '*_spec.lua', '**/.*']
+
+# The format version of this file. This is required.
+formatversion: 1.0.0
+
+# vim: set et sw=2 ts=2 :
