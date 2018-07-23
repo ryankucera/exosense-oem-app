@@ -20,8 +20,8 @@
 
           <v-tab-item key="login" class="pa-3">
             <v-form ref="login" v-model="loginValid">
-              <v-text-field required :rules="emailRules" label="Email" v-model="email" />
-              <v-text-field required :rules="passwordRules" type="password" label="Password" v-model="password" />
+              <v-text-field dark required :rules="emailRules" label="Email" v-model="email" />
+              <v-text-field dark required :rules="passwordRules" type="password" label="Password" v-model="password" />
             </v-form>
             <div class="text-xs-center">
               <v-btn :disabled="!loginValid" @click="login()" color="accent">Login</v-btn>
@@ -30,9 +30,9 @@
 
           <v-tab-item key="signup" class="pa-3">
             <v-form ref="signup" v-model="signupValid">
-              <v-text-field required :rules="nameRules" label="Name" v-model="name" />
-              <v-text-field required :rules="emailRules" label="Email" v-model="email" />
-              <v-text-field required :rules="passwordRules" type="password" label="Password" v-model="password" />
+              <v-text-field dark required :rules="nameRules" label="Name" v-model="name" />
+              <v-text-field dark required :rules="emailRules" label="Email" v-model="email" />
+              <v-text-field dark required :rules="passwordRules" type="password" label="Password" v-model="password" />
             </v-form>
             <div class="text-xs-center">
               <v-btn :disabled="!signupValid" @click="signup()" color="accent">Signup</v-btn>
