@@ -2,18 +2,19 @@
   <v-container class="login-container">
     <v-layout>
       <v-flex xs6 offset-xs3>
-        <img :src="logo" class="logo mt-2 mb-2">
+        <div class="text-xs-center">
+          <img :src="logo" class="login-logo mt-2 mb-2">
+        </div>
         <v-tabs
           v-model="active"
-          color="primary"
-          dark
-          slider-color="secondary"
+          slider-color="accent"
           fixed-tabs
+          color="secondary"
         >
-          <v-tab key="login" ripple>
+          <v-tab key="login" ripple class="white--text">
             Login
           </v-tab>
-          <v-tab key="signup" ripple>
+          <v-tab key="signup" ripple class="white--text">
             Signup
           </v-tab>
 
@@ -119,6 +120,9 @@ export default {
 </script>
 
 <style>
+.login-logo {
+  width: 80%;
+}
 .login-container {
   background-color: #222736 !important;
   height: 100%;
