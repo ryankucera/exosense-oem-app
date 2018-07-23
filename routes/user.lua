@@ -39,7 +39,7 @@ if response and response.error == nil then
     time_to_live=24*60*60
   })
 end
-return { error="Couldnt create user - does user already exist?", status=400 }
+return { error="Couldnt create user - does user already exist?" }
 
 --#ENDPOINT GET /users
 local u = require('users')

@@ -1,30 +1,57 @@
---#ENDPOINT POST /devices/claim
+--#ENDPOINT POST /claim
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
-  local identity = tostring(request.parameters.identity)
   local claimCode = tostring(request.body.claimCode)
   local userId = tostring(user.id)
 
-  print("Claiming device: "..identity.. " using code: "..claimCode)
+  print("Claiming using code: "..claimCode)
+  if not claimCode then
+    return { error="no claim code supplied" }
+  end
 
-  local key = identity
-  local isClaimed = Keystore.get({ key=key })
-  print("is claimed: "..to_json(isClaimed))
-  if not isClaimed or not isClaimed.value then
-    print("Claiming device: "..to_json(Keystore.command({
-      key=key,
-      command="hmset",
-      args={ "claimedBy", userId, "claimed", true }})))
-    print("Associating device with user: "..to_json(Keystore.command({
-      key='user.'..tostring(userId),
-      command="sadd",
-      args={identity}
-    })))
+  local codeMatch = false
+  local deviceMatch = false
+  local d2resp = Device2.listIdentities()
+  for i,device in pairs(d2resp.devices) do
+    if device and device.state and device.state.claim_code then
+      local claimResource = device.state.claim_code
+      print("Claim resource: "..to_json(claimResource))
+      local deviceCode = claimResource.set
+      print("Device code: "..to_json(deviceCode))
+      if deviceCode and deviceCode == claimCode then
+        codeMatch = true
+        deviceMatch = device
+        break
+      end
+    end
+  end
+
+  print("Matching device: "..to_json(deviceMatch))
+  if codeMatch and deviceMatch then
+    local identity = deviceMatch.identity
+    local key = tostring(identity)
+    local isClaimed = Keystore.get({ key=key })
+    print("is claimed: "..to_json(isClaimed))
+    if not isClaimed or not isClaimed.value then
+      print("Claiming device: "..to_json(Keystore.command({
+        key=key,
+        command="hmset",
+        args={ "claimedBy", userId, "claimed", true }})))
+      print("Associating device with user: "..to_json(Keystore.command({
+        key='user.'..tostring(userId),
+        command="sadd",
+        args={identity}
+      })))
+    else
+      return { error="Device has been claimed" }
+    end
   else
-    return { error="Device has been claimed" }
+    print("response: "..to_json(response))
+    return { error="Unable to find device that matches claim code" }
   end
 end
+
 --#ENDPOINT POST /devices/{identity}/unclaim
 local u = require('users')
 local user = u.verifyToken(request, response)
@@ -51,6 +78,7 @@ if user then
     return { error="Device has been claimed" }
   end
 end
+
 --#ENDPOINT GET /devices/{identity}
 local u = require('users')
 local user = u.verifyToken(request, response)
@@ -66,15 +94,12 @@ if user then
   end
   return device
 end
+
 --#ENDPOINT GET /devices
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
   local userId = tostring(user.id)
-  -- local userDevices = Keystore.command({ key='user.'..userId, command="smembers"})
-  -- if userDevices then
-
-  -- end
   local response = Device2.listIdentities()
   local devices = {}
   for i,device in pairs(response.devices) do
@@ -91,10 +116,9 @@ if user then
       -- This filters out devices that are claimed, but not by you
     else
       -- unclaimed devices
-      table.insert(devices, device)
+      -- table.insert(devices, device)
     end
   end
-
-  return devices
+  return setmetatable(devices, {['__type']='slice'})
 end
 
