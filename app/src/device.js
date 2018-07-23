@@ -1,9 +1,6 @@
 import _ from 'lodash'
 import axios from '@/axios'
 
-// Maybe do something with this to make it reactive
-import Vue from 'vue'
-
 export default class Device {
   constructor (data) {
     Object.assign(this, data)

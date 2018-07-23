@@ -36,36 +36,16 @@
                 </v-menu>
               </v-list-tile-action>
             </v-list-tile>
-            <v-divider />
-            <v-subheader>Unclaimed devices</v-subheader>
-            <v-list-tile
-              v-for="item in unclaimedDevices"
-              :key="item.identity"
-              avatar
-              @click="selectedDevice=item"
-            >
-              <v-list-tile-avatar>
-                <v-icon>router</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.identity }}</v-list-tile-title>
-                <v-list-tile-sub-title>{{ item.meta.claimed ? 'Claimed' : 'Unclaimed' }}</v-list-tile-sub-title>
-              </v-list-tile-content>
-              <v-list-tile-action @click.stop>
-                <v-menu offset-y>
-                  <v-btn icon ripple slot="activator">
-                    <v-icon color="grey lighten-1">more_vert</v-icon>
-                  </v-btn>
-                  <v-list>
-                    <v-list-tile href="javascript:;" v-if="!item.meta.claimed" @click="claimingDevice=item;claimDeviceDialog=true">
-                      <v-list-tile-title>Claim</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
-              </v-list-tile-action>
-            </v-list-tile>
+            <div class="subtitle px-3" v-if="yourDevices.length === 0">
+              You have no claimed devices. You can claim a device by clicking the button below.
+            </div>
             <v-divider />
           </v-list>
+          <div class="text-xs-center mt-5">
+            <v-btn primary @click="claimDeviceDialog=true">
+              Claim Device
+            </v-btn>
+          </div>
         </v-flex>
         <v-flex xs6>
           <DeviceDetail :device="selectedDevice" />
@@ -75,7 +55,7 @@
 
     <v-dialog v-model="claimDeviceDialog" max-width="500">
       <v-card>
-        <v-card-title class="headline">Claim Device {{ claimingDevice.identity }}?</v-card-title>
+        <v-card-title class="headline">Claim Device Using Code</v-card-title>
         <v-card-text>
           <v-text-field v-model="claimCode" label="Claim Code" />
         </v-card-text>
@@ -105,6 +85,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import axios from '@/axios'
 import { auth } from '@/Auth'
 import DeviceDetail from '@/components/DeviceDetail'
@@ -112,7 +93,7 @@ import Device from '@/device'
 
 export default {
   components: {
-    DeviceDetail,
+    DeviceDetail
   },
   data () {
     return {
@@ -123,19 +104,18 @@ export default {
 
       claimDeviceDialog: false,
       claimingDevice: {},
-      claimCode: "",
+      claimCode: '',
       snackbar: false,
       snackbarText: '',
       snackbarColor: ''
     }
   },
   methods: {
-    fetchDevices() {
+    fetchDevices () {
       this.loading = true
       axios.get('/devices')
         .then(response => {
           this.loading = false
-          console.log({ response })
           this.devices = response.data.map(device => {
             Object.assign(device, { $socket: this.$socket, $options: this.$options, $set: this.$set })
             const d = new Device(device)
@@ -144,20 +124,23 @@ export default {
           })
         })
     },
-    claimDevice() {
-      const url = `/devices/claim`
+    claimDevice () {
+      const url = `/claim`
       return axios.post(url, { claimCode: this.claimCode }).then(response => {
-        console.log({ response })
-        this.snackbar = true
-        this.snackbarColor = 'success'
-        this.snackbarText = 'Claimed device successfully'
-        this.claimDeviceDialog = false
-        this.fetchDevices()
+        if (response.data && response.data.error) {
+          this.snackbar = true
+          this.snackbarColor = 'error'
+          this.snackbarText = response.data.error
+          this.claimDeviceDialog = false
+        } else {
+          this.snackbar = true
+          this.snackbarColor = 'success'
+          this.snackbarText = 'Claimed device successfully'
+          this.claimDeviceDialog = false
+          this.fetchDevices()
+        }
       }).catch(err => {
-        this.snackbar = true
-        this.snackbarColor = 'error'
-        this.snackbarText = 'Incorrect claim code'
-        this.claimDeviceDialog = false
+        console.warn(err)
       })
     }
   },
@@ -165,10 +148,7 @@ export default {
     yourDevices () {
       return _.filter(this.devices, device => device.meta.claimedBy === this.profile.id.toString())
     },
-    unclaimedDevices() {
-      return _.filter(this.devices, device => !device.meta || !device.meta.claimed)
-    },
-    profile() {
+    profile () {
       return auth.profile() || {}
     }
   },

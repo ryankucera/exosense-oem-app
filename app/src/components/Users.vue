@@ -30,12 +30,9 @@
 
 <script>
 import { auth } from '@/Auth'
-import axios from '@/axios'
 import Users from '@/users'
 
 export default {
-  components: {
-  },
   data () {
     return {
       authenticated: auth.authenticated,
@@ -46,14 +43,13 @@ export default {
     }
   },
   methods: {
-    fetchUsers() {
-      const users = this.Users.users;
-      if(!users) {
+    fetchUsers () {
+      const users = this.Users.users
+      if (!users) {
         this.Users.fetch().then(() => {
           this.users = this.Users.users
         })
       }
-
     }
   },
   mounted () {

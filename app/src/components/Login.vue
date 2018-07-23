@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import logo from '@/assets/exositelogo.png'
 import { auth } from '@/Auth'
 
@@ -96,9 +95,10 @@ export default {
         password: this.password
       }
       auth.signup(data).then(response => {}).catch(err => {
+        console.warn({ err })
         this.snackbar = true
-        this.snackbarText = "Error signing up"
-        this.snackbarColor = "error"
+        this.snackbarText = 'Error signing up'
+        this.snackbarColor = 'error'
       })
     },
     login () {
@@ -108,9 +108,10 @@ export default {
       }
       auth.login(data).then(response => {
       }).catch(err => {
+        console.warn({ err })
         this.snackbar = true
-        this.snackbarText = "Invalid Login"
-        this.snackbarColor = "error"
+        this.snackbarText = 'Invalid Login'
+        this.snackbarColor = 'error'
       })
     }
   }

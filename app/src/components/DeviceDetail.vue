@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
-
 export default {
   props: {
     device: {
@@ -45,9 +43,9 @@ export default {
   },
   data () {
     return {
-      timestampFormat: "MMMM Do YYYY, h:mm:ss a"
+      timestampFormat: 'MMMM Do YYYY, h:mm:ss a'
     }
-  },
+  }
 }
 </script>
 

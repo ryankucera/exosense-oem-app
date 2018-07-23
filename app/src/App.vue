@@ -84,38 +84,38 @@ export default {
         icon: 'group',
         title: 'Users',
         route: 'Users'
-      },
+      }
       ],
       menuItems: [{
-          title: 'Profile',
-        }, {
-          title: 'Sign Out',
-          fn: this.logout,
-        }
-      ],
+        title: 'Profile'
+      }, {
+        title: 'Sign Out',
+        fn: this.logout
+      }
+      ]
     }
   },
   name: 'app',
   computed: {
-    profile() {
+    profile () {
       return auth.profile() || {}
     },
-    title() {
+    title () {
       return this.$route.name
     }
   },
   methods: {
-    login() {
+    login () {
       auth.login()
     },
-    logout() {
+    logout () {
       auth.logout()
     },
-    signup() {
+    signup () {
       auth.signup()
-    },
+    }
   },
-  mounted() {
+  mounted () {
     if (!this.authenticated) {
       // if we aren't authenticated and we're not returning form Auth0
       this.$router.push({ path: '/login' })
@@ -126,7 +126,7 @@ export default {
       this.authenticated = authState.authenticated
       this.redirect = true
     })
-  },
+  }
 }
 </script>
 
