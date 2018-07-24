@@ -1,58 +1,59 @@
 <template>
-  <v-container fluid>
-    <v-slide-y-transition mode="out-in">
-      <v-layout row>
-        <v-flex xs6>
-          <v-list two-line subheader>
-            <v-subheader>Your devices</v-subheader>
-            <v-list-tile
-              v-for="item in yourDevices"
-              :key="item.identity"
-              avatar
-              @click="selectedDevice=item"
-            >
-              <v-list-tile-avatar>
-                <v-icon>router</v-icon>
-              </v-list-tile-avatar>
+  <v-container fluid class="fill-height">
+    <v-layout row>
+      <v-flex xs6>
+        <v-list two-line subheader>
+          <v-subheader>Your devices</v-subheader>
+          <v-list-tile
+            v-for="item in yourDevices"
+            :key="item.identity"
+            avatar
+            @click="selectedDevice=item"
+          >
+            <v-list-tile-avatar>
+              <v-icon>router</v-icon>
+            </v-list-tile-avatar>
 
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.identity }}</v-list-tile-title>
-                <v-list-tile-sub-title>{{ item.meta.claimed ? 'Claimed' : 'Unclaimed' }}</v-list-tile-sub-title>
-              </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-title>{{ item.identity }}</v-list-tile-title>
+              <v-list-tile-sub-title>{{ item.meta.claimed ? 'Claimed' : 'Unclaimed' }}</v-list-tile-sub-title>
+            </v-list-tile-content>
 
-              <v-list-tile-action @click.stop>
-                <v-menu offset-y>
-                  <v-btn icon ripple slot="activator">
-                    <v-icon color="grey lighten-1">more_vert</v-icon>
-                  </v-btn>
-                  <v-list>
-                    <v-list-tile href="javascript:;" v-if="item.meta.claimed" @click="item.unclaim()">
-                      <v-list-tile-title>Unclaim</v-list-tile-title>
-                    </v-list-tile>
-                    <!-- <v-list-tile href="javascript:;" @click="item.del()">
-                      <v-list-tile-title>Delete</v-list-tile-title>
-                    </v-list-tile> -->
-                  </v-list>
-                </v-menu>
-              </v-list-tile-action>
-            </v-list-tile>
-            <div class="subtitle px-3" v-if="yourDevices.length === 0">
-              You have no claimed devices. You can claim a device by clicking the button below.
-            </div>
-            <v-divider />
-          </v-list>
-          <div class="text-xs-center mt-5">
-            <v-btn primary @click="claimDeviceDialog=true">
-              Claim Device
-            </v-btn>
+            <v-list-tile-action @click.stop>
+              <v-menu offset-y>
+                <v-btn icon ripple slot="activator">
+                  <v-icon color="grey lighten-1">more_vert</v-icon>
+                </v-btn>
+                <v-list>
+                  <v-list-tile href="javascript:;" v-if="item.meta.claimed" @click="item.unclaim()">
+                    <v-list-tile-title>Unclaim</v-list-tile-title>
+                  </v-list-tile>
+                  <!-- <v-list-tile href="javascript:;" @click="item.del()">
+                    <v-list-tile-title>Delete</v-list-tile-title>
+                  </v-list-tile> -->
+                </v-list>
+              </v-menu>
+            </v-list-tile-action>
+          </v-list-tile>
+          <div class="subtitle px-3" v-if="!loading && yourDevices.length === 0">
+            You have no claimed devices. You can claim a device by clicking the button below.
           </div>
-        </v-flex>
-        <v-flex xs6>
-          <DeviceDetail :device="selectedDevice" />
-        </v-flex>
-      </v-layout>
-    </v-slide-y-transition>
+          <v-divider />
+          <div class="text-xs-center ma-1" v-if="loading">
+            <v-progress-circular indeterminate color="primary"/>
+          </div>
+        </v-list>
 
+        <div class="text-xs-center mt-5">
+          <v-btn color="accent" @click="claimDeviceDialog=true">
+            Claim Device
+          </v-btn>
+        </div>
+      </v-flex>
+      <v-flex xs6>
+        <DeviceDetail :device="selectedDevice" />
+      </v-flex>
+    </v-layout>
     <v-dialog v-model="claimDeviceDialog" max-width="500">
       <v-card>
         <v-card-title class="headline">Claim Device Using Code</v-card-title>
@@ -115,6 +116,8 @@ export default {
             d.subscribe()
             return d
           })
+        }).catch(err => {
+          this.loading = false
         })
     },
     claimDevice () {

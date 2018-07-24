@@ -84,15 +84,20 @@ local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
   local identity = request.parameters.identity
-  local device = Device2.getIdentity({ identity=identity })
-  local hash = Keystore.command({ key=identity, command="hgetall" })
-  device.meta = {}
-  if hash and hash.value then
-    for k,v in pairs(hash.value) do
-      device.meta[k] = v
+
+  local isClaimed = Keystore.command({ key=tostring(identity), command="hgetall" })
+  if isClaimed and isClaimed.value and isClaimed.value.claimedBy == tostring(user.id) then
+    local device = Device2.getIdentity({ identity=identity })
+    local hash = Keystore.command({ key=identity, command="hgetall" })
+    device.meta = {}
+    if hash and hash.value then
+      for k,v in pairs(hash.value) do
+        device.meta[k] = v
+      end
     end
+    return device
   end
-  return device
+  return { error="Cannot find device" }
 end
 
 --#ENDPOINT GET /api/devices

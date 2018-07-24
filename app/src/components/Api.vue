@@ -1,7 +1,8 @@
 <template>
-  <v-container>
+  <v-container class="fill-height">
     <v-layout>
-      <v-flex xs6 class="px-4">
+      <v-flex xs6 class="px-4 border-right">
+        <p class="title">Host: {{ location }}</p>
         <v-list two-line>
           <template v-for="(route, i) in routes">
             <v-subheader v-if="route.header" :key="i">{{ route.header }}</v-subheader>
@@ -14,9 +15,8 @@
           </template>
         </v-list>
       </v-flex>
-
       <v-flex xs6 class="px-4 pt-4">
-        <v-toolbar v-if="selectedRoute" dense>
+        <v-toolbar v-if="selectedRoute" dense color="grey lighten-1">
           <v-toolbar-title>{{ selectedRoute.route }}</v-toolbar-title>
           <v-spacer />
           <v-toolbar-items>
@@ -35,12 +35,11 @@
             single-line
           />
         </v-toolbar>
-        <v-card class="mt-4" v-if="selectedRoute" dark>
+        <v-card class="mt-4" v-if="selectedRoute && selectedRoute.response" dark>
           <v-card-text>
-            <pre v-if="selectedRoute">{{ selectedRoute.response }}</pre>
+            <pre>{{ selectedRoute.response }}</pre>
           </v-card-text>
         </v-card>
-
       </v-flex>
     </v-layout>
     <v-snackbar v-model="snackbar" :color="snackbarColor">
@@ -55,10 +54,12 @@
 <script>
 import _ from 'lodash'
 import axios from '@/axios'
+const location = window.location.origin
 
 export default {
   data() {
     return {
+      location,
       loading: false,
       selectedRoute: '',
       snackbarText: '',
@@ -81,6 +82,11 @@ export default {
               value: '',
             }
           }
+        },
+        {
+          route: '/api/${identity}/unclaim',
+          method: 'post',
+          description: 'Unclaim a claimed identity',
         },
         {
           route: '/api/devices/${identity}',
@@ -151,5 +157,8 @@ export default {
 .api-result {
   background-color: #777;
   color: white;
+}
+.border-right {
+  border-right: 1px solid rgba(0,0,0,0.06);
 }
 </style>

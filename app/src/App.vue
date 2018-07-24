@@ -37,7 +37,7 @@
     <v-toolbar
       v-if="authenticated"
       app
-      color="accent"
+      color="primary"
     >
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title v-text="title"></v-toolbar-title>
@@ -80,11 +80,11 @@ export default {
         title: 'Devices',
         route: 'Devices'
       },
-      {
-        icon: 'group',
-        title: 'Users',
-        route: 'Users'
-      },
+      // {
+      //   icon: 'group',
+      //   title: 'Users',
+      //   route: 'Users'
+      // },
       {
         icon: 'code',
         title: 'Api',

@@ -10,7 +10,7 @@ import VueNativeSock from 'vue-native-websocket'
 Vue.use(Vuetify, { theme: {
   primary: '#2C9DB6',
   secondary: '#222736',
-  accent: '#2C9DB6',
+  accent: '#F15C2E',
   error: '#FF5252',
   info: '#2196F3',
   success: '#4CAF50',
