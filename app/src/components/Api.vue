@@ -26,13 +26,14 @@
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
-        <v-toolbar v-if="selectedRoute && selectedRoute.parameters">
+        <v-toolbar v-show="selectedRoute && selectedRoute.parameters && Object.keys(selectedRoute.parameters).length">
           <v-text-field
             v-for="parameter in selectedRoute.parameters"
             :key="parameter.key"
             :label="parameter.label"
             v-model="parameter.value"
             single-line
+            hide-details
           />
         </v-toolbar>
         <v-card class="mt-4" v-if="selectedRoute && selectedRoute.response" dark>
@@ -84,9 +85,17 @@ export default {
           }
         },
         {
-          route: '/api/${identity}/unclaim',
+          route: '/api/devices/${identity}/unclaim',
           method: 'post',
           description: 'Unclaim a claimed identity',
+          parameters: {
+            identity: {
+              key: 'identity',
+              type: 'url',
+              label: 'Device Identity',
+              value: '',
+            }
+          }
         },
         {
           route: '/api/devices/${identity}',
@@ -161,4 +170,11 @@ export default {
 .border-right {
   border-right: 1px solid rgba(0,0,0,0.06);
 }
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 </style>

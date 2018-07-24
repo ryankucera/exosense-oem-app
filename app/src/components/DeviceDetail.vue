@@ -24,7 +24,7 @@
       <pre v-if="device.dataIn.reported" class="pa-4 mb-2 caption api-result">{{ device.dataIn.reported }}</pre>
     </div>
 
-    <v-toolbar dense class="blue darken-1 mt-5" small>
+    <v-toolbar dense class="blue darken-1 mt-5" small v-if="device.configIo && device.configIo.reported">
       <v-toolbar-title>
         config_io
       </v-toolbar-title>

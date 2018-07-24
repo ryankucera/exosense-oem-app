@@ -11,12 +11,16 @@ export default class Device {
       const parsed = this.parseResource('data_in', dataIn.reported)
       dataIn.timestamp = dataIn.timestamp / 1e3
       this.dataIn = Object.assign({}, dataIn, { reported: parsed })
+    } else {
+      this.dataIn = {}
     }
     const configIo = this.state['config_io']
     if (configIo) {
       const parsed = this.parseResource('config_io', configIo.reported)
       configIo.timestamp = configIo.timestamp / 1e3
       this.configIo = Object.assign({}, configIo, { reported: parsed })
+    } else {
+      this.configIo = {}
     }
 
     this.parseDevice()
