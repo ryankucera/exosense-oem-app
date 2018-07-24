@@ -67,16 +67,9 @@
       </v-card>
     </v-dialog>
 
-    <v-snackbar
-      v-model="snackbar"
-      :color="snackbarColor"
-    >
+    <v-snackbar v-model="snackbar" :color="snackbarColor">
       {{ snackbarText }}
-      <v-btn
-        dark
-        flat
-        @click="snackbar = false"
-      >
+      <v-btn dark flat @click="snackbar = false">
         Close
       </v-btn>
     </v-snackbar>
@@ -113,7 +106,7 @@ export default {
   methods: {
     fetchDevices () {
       this.loading = true
-      axios.get('/devices')
+      axios.get('/api/devices')
         .then(response => {
           this.loading = false
           this.devices = response.data.map(device => {
@@ -125,7 +118,7 @@ export default {
         })
     },
     claimDevice () {
-      const url = `/claim`
+      const url = `/api/claim`
       return axios.post(url, { claimCode: this.claimCode }).then(response => {
         if (response.data && response.data.error) {
           this.snackbar = true

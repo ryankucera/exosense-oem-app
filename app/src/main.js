@@ -17,7 +17,7 @@ Vue.use(Vuetify, { theme: {
   warning: '#FFC107'
 }})
 
-Vue.use(VueNativeSock, 'ws://localhost:3000/subscribe')
+Vue.use(VueNativeSock, 'ws://localhost:3000/api/subscribe')
 Vue.use(require('vue-moment'))
 
 Vue.config.productionTip = false

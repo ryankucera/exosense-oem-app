@@ -5,7 +5,7 @@ export default class Device {
   constructor (data) {
     Object.assign(this, data)
     this.lastReported = 0
-    this.base = `/devices/${data.identity}`
+    this.base = `/api/devices/${data.identity}`
     const dataIn = this.state['data_in']
     if (dataIn) {
       const parsed = this.parseResource('data_in', dataIn.reported)

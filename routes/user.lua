@@ -1,5 +1,5 @@
 
---#ENDPOINT POST /users/login
+--#ENDPOINT POST /api/users/login
 local email = request.body.email
 local password = request.body.password
 if not email or not password then
@@ -16,7 +16,7 @@ end
 local token = response
 return response
 
---#ENDPOINT POST /users/create
+--#ENDPOINT POST /api/users/create
 local name = request.body.name
 local email = request.body.email
 local password = request.body.password
@@ -41,14 +41,14 @@ if response and response.error == nil then
 end
 return { error="Couldnt create user - does user already exist?" }
 
---#ENDPOINT GET /users
+--#ENDPOINT GET /api/users
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
   return User.listUsers()
 end
 
---#ENDPOINT GET /users/currentUser
+--#ENDPOINT GET /api/users/currentUser
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
@@ -56,7 +56,7 @@ if user then
 end
 
 
---#ENDPOINT POST /users/delete
+--#ENDPOINT POST /api/users/delete
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then

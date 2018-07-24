@@ -17,7 +17,7 @@ export default class AuthService {
   }
 
   login (data) {
-    return axios.post('/users/login', data).then(response => {
+    return axios.post('/api/users/login', data).then(response => {
       if (JSON.stringify(response.data).toLowerCase().indexOf('invalid login') > -1) {
         return Promise.reject(new Error('invalid login'))
       }
@@ -28,7 +28,7 @@ export default class AuthService {
   }
 
   signup (data) {
-    return axios.post('/users/create', data).then(response => {
+    return axios.post('/api/users/create', data).then(response => {
       if (response.data && response.data.error) {
         return Promise.reject(new Error('invalid signup'))
       }
@@ -38,7 +38,7 @@ export default class AuthService {
   }
 
   setProfile () {
-    return axios.get('/users/currentUser').then(response => {
+    return axios.get('/api/users/currentUser').then(response => {
       localStorage.setItem('profile', JSON.stringify(response.data))
     })
   }

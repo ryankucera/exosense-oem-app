@@ -3,7 +3,7 @@ import axios from '@/axios'
 export default class Users {
   constructor (data) {
     this.users = data
-    this.base = `/users`
+    this.base = `/api/users`
   }
   set users (users) {
     this._users = users

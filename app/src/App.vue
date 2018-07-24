@@ -23,7 +23,7 @@
               <v-list-tile-action>
                 <v-icon class="grey--text lighten-2" v-html="item.icon"></v-icon>
               </v-list-tile-action>
-              <v-list-tile-content>
+              <v-list-tile-content style="margin-left: -8px">
                 <v-list-tile-title v-text="item.title"></v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -84,7 +84,12 @@ export default {
         icon: 'group',
         title: 'Users',
         route: 'Users'
-      }
+      },
+      {
+        icon: 'code',
+        title: 'Api',
+        route: 'Api'
+      },
       ],
       menuItems: [{
         title: 'Profile'

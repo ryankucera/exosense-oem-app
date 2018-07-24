@@ -41,16 +41,9 @@
         </v-tabs>
       </v-flex>
     </v-layout>
-    <v-snackbar
-      v-model="snackbar"
-      :color="snackbarColor"
-    >
+    <v-snackbar v-model="snackbar" :color="snackbarColor">
       {{ snackbarText }}
-      <v-btn
-        dark
-        flat
-        @click="snackbar = false"
-      >
+      <v-btn dark flat @click="snackbar = false">
         Close
       </v-btn>
     </v-snackbar>

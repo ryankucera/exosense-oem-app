@@ -1,4 +1,4 @@
---#ENDPOINT POST /claim
+--#ENDPOINT POST /api/claim
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
@@ -52,7 +52,7 @@ if user then
   end
 end
 
---#ENDPOINT POST /devices/{identity}/unclaim
+--#ENDPOINT POST /api/devices/{identity}/unclaim
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
@@ -79,7 +79,7 @@ if user then
   end
 end
 
---#ENDPOINT GET /devices/{identity}
+--#ENDPOINT GET /api/devices/{identity}
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
@@ -95,7 +95,7 @@ if user then
   return device
 end
 
---#ENDPOINT GET /devices
+--#ENDPOINT GET /api/devices
 local u = require('users')
 local user = u.verifyToken(request, response)
 if user then
