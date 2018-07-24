@@ -108,7 +108,6 @@ export default class Device {
   unclaim () {
     const url = `${this.base}/unclaim`
     return axios.post(url, {}).then(response => {
-      this.refetch()
     })
   }
   del () {

@@ -168,13 +168,6 @@ export default {
   color: white;
 }
 .border-right {
-  border-right: 1px solid rgba(0,0,0,0.06);
+  border-right: 1px solid rgba(0,0,0,0.12);
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-
 </style>

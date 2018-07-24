@@ -2,6 +2,12 @@
   <v-container fluid class="fill-height">
     <v-layout row>
       <v-flex xs6>
+        <div class="text-xs-right" style="margin-bottom: -16px">
+          <v-btn color="accent" @click="claimDeviceDialog=true">
+            <v-icon>add</v-icon>
+          </v-btn>
+        </div>
+
         <v-list two-line subheader>
           <v-subheader>Your devices</v-subheader>
           <v-list-tile
@@ -26,32 +32,23 @@
                   <v-icon color="grey lighten-1">more_vert</v-icon>
                 </v-btn>
                 <v-list>
-                  <v-list-tile href="javascript:;" v-if="item.meta.claimed" @click="item.unclaim()">
+                  <v-list-tile href="javascript:;" v-if="item.meta.claimed" @click="unclaimDevice(item)">
                     <v-list-tile-title>Unclaim</v-list-tile-title>
                   </v-list-tile>
-                  <!-- <v-list-tile href="javascript:;" @click="item.del()">
-                    <v-list-tile-title>Delete</v-list-tile-title>
-                  </v-list-tile> -->
                 </v-list>
               </v-menu>
             </v-list-tile-action>
           </v-list-tile>
           <div class="subtitle px-3" v-if="!loading && yourDevices.length === 0">
-            You have no claimed devices. You can claim a device by clicking the button below.
+            You have no claimed devices. You can claim a device by clicking the button above.
           </div>
-          <v-divider />
+          <v-divider v-else />
           <div class="text-xs-center ma-1" v-if="loading">
             <v-progress-circular indeterminate color="primary"/>
           </div>
         </v-list>
-
-        <div class="text-xs-center mt-5">
-          <v-btn color="accent" @click="claimDeviceDialog=true">
-            Claim Device
-          </v-btn>
-        </div>
       </v-flex>
-      <v-flex xs6>
+      <v-flex xs6 class="px-5">
         <DeviceDetail :device="selectedDevice" />
       </v-flex>
     </v-layout>
@@ -106,6 +103,7 @@ export default {
     }
   },
   methods: {
+
     fetchDevices () {
       this.loading = true
       axios.get('/api/devices')
@@ -120,6 +118,11 @@ export default {
         }).catch(err => {
           this.loading = false
         })
+    },
+    unclaimDevice(item) {
+      item.unclaim().then(() => {
+        this.fetchDevices()
+      })
     },
     claimDevice () {
       const url = `/api/claim`
@@ -162,6 +165,9 @@ export default {
 <style>
 .active {
   background-color: #2C9DB639 !important;
+}
+.border-right {
+  border-right: 1px solid rgba(0,0,0,0.12);
 }
 
 </style>

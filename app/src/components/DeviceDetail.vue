@@ -1,19 +1,11 @@
 <template>
   <v-container v-if="device">
-    <v-toolbar dense>
-      <v-toolbar-title>
-        {{ device.identity }}
-      </v-toolbar-title>
-      <v-spacer />
-      <span v-if="device.lastip">IP: {{ device.lastip }} &nbsp; Auth: {{ device.auth.type }}</span>
-    </v-toolbar>
-    <!-- <div class="resource-value">
-      Status: {{ device.status }}
-      Online: {{ device.online }}
-      Auth: {{ device.auth.type }}
-    </div> -->
+    <div>
+      <p class="headline">{{ device.identity }}</p>
+      <p class="caption" v-if="device.lastip">IP: {{ device.lastip }} &nbsp; Auth: {{ device.auth.type }}</p>
+    </div>
 
-    <v-toolbar dense class="red lighten-2 mt-5" small>
+    <v-toolbar dense class="mt-5" color="primary" small>
       <v-toolbar-title>
         data_in
       </v-toolbar-title>
@@ -21,10 +13,10 @@
       {{ device.dataIn.timestamp | moment(timestampFormat) || "Has not reported" }}
     </v-toolbar>
     <div class="resource-value">
-      <pre v-if="device.dataIn.reported" class="pa-4 mb-2 caption api-result">{{ device.dataIn.reported }}</pre>
+      <pre v-if="device.dataIn.reported" class="pa-4 mb-2 api-result">{{ device.dataIn.reported }}</pre>
     </div>
 
-    <v-toolbar dense class="blue darken-1 mt-5" small v-if="device.configIo && device.configIo.reported">
+    <v-toolbar dense class="mt-5" color="primary" small v-if="device.configIo && device.configIo.reported">
       <v-toolbar-title>
         config_io
       </v-toolbar-title>
@@ -32,7 +24,7 @@
       {{ device.configIo.timestamp | moment(timestampFormat) || "Has not reported"}}
     </v-toolbar>
     <div class="resource-value">
-      <pre v-if="device.configIo.reported" class="pa-4 mb-2 caption api-result">{{ device.configIo.reported }}</pre>
+      <pre v-if="device.configIo.reported" class="pa-4 mb-2 api-result">{{ device.configIo.reported }}</pre>
     </div>
   </v-container>
 </template>
