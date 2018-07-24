@@ -1,16 +1,11 @@
 <template>
-  <v-container class="login-container">
-    <v-layout>
-      <v-flex xs6 offset-xs3>
+  <v-container class="login-container full-height">
+    <v-layout class="center">
+      <v-flex md4 offset-md4 sm6 offset-sm3 xs8 offset-xs2>
         <div class="text-xs-center">
           <img :src="logo" class="login-logo mt-2 mb-2">
         </div>
-        <v-tabs
-          v-model="active"
-          slider-color="accent"
-          fixed-tabs
-          color="secondary"
-        >
+        <v-tabs v-model="active" slider-color="accent" fixed-tabs color="secondary">
           <v-tab key="login" ripple class="white--text">
             Login
           </v-tab>
@@ -18,24 +13,24 @@
             Signup
           </v-tab>
 
-          <v-tab-item key="login" class="pa-3">
+          <v-tab-item key="login" class="width-limit py-5">
             <v-form ref="login" v-model="loginValid">
               <v-text-field dark required :rules="emailRules" label="Email" v-model="email" />
               <v-text-field dark required :rules="passwordRules" type="password" label="Password" v-model="password" />
             </v-form>
             <div class="text-xs-center">
-              <v-btn :disabled="!loginValid" @click="login()" color="accent">Login</v-btn>
+              <v-btn :disabled="!loginValid" @click="login()" color="primary">Login</v-btn>
             </div>
           </v-tab-item>
 
-          <v-tab-item key="signup" class="pa-3">
+          <v-tab-item key="signup" class="width-limit py-4">
             <v-form ref="signup" v-model="signupValid">
               <v-text-field dark required :rules="nameRules" label="Name" v-model="name" />
               <v-text-field dark required :rules="emailRules" label="Email" v-model="email" />
               <v-text-field dark required :rules="passwordRules" type="password" label="Password" v-model="password" />
             </v-form>
             <div class="text-xs-center">
-              <v-btn :disabled="!signupValid" @click="signup()" color="accent">Signup</v-btn>
+              <v-btn :disabled="!signupValid" @click="signup()" color="primary">Signup</v-btn>
             </div>
           </v-tab-item>
         </v-tabs>
@@ -114,7 +109,8 @@ export default {
 
 <style>
 .login-logo {
-  width: 80%;
+  width: 70%;
+  min-width: 300px;
 }
 .login-container {
   background-color: #222736 !important;
@@ -122,5 +118,17 @@ export default {
   width: 100vw !important;
 }
 
+.center {
+  height: 80vh !important;
+}
+.center > .flex {
+  margin-top: 12vh;
+}
+
+.width-limit {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 </style>
