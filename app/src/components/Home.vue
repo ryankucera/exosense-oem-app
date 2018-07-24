@@ -9,6 +9,7 @@
             :key="item.identity"
             avatar
             @click="selectedDevice=item"
+            :class="selectedDevice.identity === item.identity ? 'active' : ''"
           >
             <v-list-tile-avatar>
               <v-icon>router</v-icon>
@@ -16,7 +17,7 @@
 
             <v-list-tile-content>
               <v-list-tile-title>{{ item.identity }}</v-list-tile-title>
-              <v-list-tile-sub-title>{{ item.meta.claimed ? 'Claimed' : 'Unclaimed' }}</v-list-tile-sub-title>
+              <v-list-tile-sub-title>Claimed // Status: {{ item.status }}</v-list-tile-sub-title>
             </v-list-tile-content>
 
             <v-list-tile-action @click.stop>
@@ -158,19 +159,9 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
+<style>
+.active {
+  background-color: #2C9DB639 !important;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>

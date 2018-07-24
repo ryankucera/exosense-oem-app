@@ -5,7 +5,7 @@
         {{ device.identity }}
       </v-toolbar-title>
       <v-spacer />
-      IP: {{ device.lastip }}
+      <span v-if="device.lastip">IP: {{ device.lastip }} &nbsp; Auth: {{ device.auth.type }}</span>
     </v-toolbar>
     <!-- <div class="resource-value">
       Status: {{ device.status }}
