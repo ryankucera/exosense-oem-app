@@ -18,8 +18,15 @@
       <v-flex xs6 class="px-4 pt-4">
         <v-toolbar v-if="selectedRoute" dense>
           <v-toolbar-title>{{ selectedRoute.route }}</v-toolbar-title>
+          <v-spacer />
+          <v-toolbar-items>
+            <v-btn flat @click="callApi()" :disabled="loading">
+              <span v-if="!loading">Call API</span>
+              <v-progress-circular indeterminate v-else></v-progress-circular>
+            </v-btn>
+          </v-toolbar-items>
         </v-toolbar>
-        <v-toolbar v-if="selectedRoute">
+        <v-toolbar v-if="selectedRoute && selectedRoute.parameters">
           <v-text-field
             v-for="parameter in selectedRoute.parameters"
             :key="parameter.key"
@@ -27,15 +34,10 @@
             v-model="parameter.value"
             single-line
           />
-          <v-spacer />
-          <v-toolbar-items>
-            <v-btn flat @click="callApi()">Call API</v-btn>
-          </v-toolbar-items>
         </v-toolbar>
-
         <v-card class="mt-4" v-if="selectedRoute" dark>
           <v-card-text>
-            <pre v-if="selectedRoute">{{ result }}</pre>
+            <pre v-if="selectedRoute">{{ selectedRoute.response }}</pre>
           </v-card-text>
         </v-card>
 
@@ -57,6 +59,7 @@ import axios from '@/axios'
 export default {
   data() {
     return {
+      loading: false,
       selectedRoute: '',
       snackbarText: '',
       snackbar: false,
@@ -103,36 +106,42 @@ export default {
   },
   methods: {
     selectRoute(route) {
-      this.selectedRoute = route
+      let parameters = _.map(route.parameters, parameter => Object.assign({}, parameter, { value: '' }))
+      this.selectedRoute = Object.assign({}, route, { response: '', parameters })
     },
     callApi() {
-      const { method, parameters } = this.selectedRoute
-      let { route } = this.selectedRoute
-      const body = {}
-      if(parameters) {
-        _.each(parameters, parameter => {
-          const { type, key, value } = parameter
-          if(type === 'url') {
-            route = _.replace(route, "${"+key+"}", value)
-          } else {
-            body[key] = value
-          }
+      if(!this.loading) {
+        const { method, parameters } = this.selectedRoute
+        let { route } = this.selectedRoute
+        const body = {}
+        if(parameters) {
+          _.each(parameters, parameter => {
+            const { type, key, value } = parameter
+            if(type === 'url') {
+              route = _.replace(route, "${"+key+"}", value)
+            } else {
+              body[key] = value
+            }
+          })
+        }
+        let promise
+        if(method === 'get') {
+          promise = axios[method](route)
+        } else {
+          promise = axios[method](route, body)
+        }
+        this.loading = true
+        promise.then(response => {
+          this.selectedRoute.response = _.get(response, 'data')
+          this.loading = false
+        }).catch(err => {
+          this.loading = false
+          this.selectedRoute.response = `[${_.get(err, 'response.status')}] ${_.get(err, 'response.data')}`
+          this.snackbarText = this.selectedRoute.response
+          this.snackbarColor = 'error'
+          this.snackbar = true
         })
       }
-      let promise
-      if(method === 'get') {
-        promise = axios[method](route)
-      } else {
-        promise = axios[method](route, body)
-      }
-      promise.then(response => {
-        this.result = _.get(response, 'data')
-      }).catch(err => {
-        this.result = `[${_.get(err, 'response.status')}] ${_.get(err, 'response.data')}`
-        this.snackbarText = this.result
-        this.snackbarColor = 'error'
-        this.snackbar = true
-      })
     }
   }
 }
