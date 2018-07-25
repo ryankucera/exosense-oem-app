@@ -123,7 +123,7 @@ export default {
   mounted () {
     if (!this.authenticated) {
       // if we aren't authenticated and we're not returning form Auth0
-      this.$router.push({ path: '/login' })
+      this.$router.replace({ path: '/login' })
     }
   },
   created () {
