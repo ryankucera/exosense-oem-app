@@ -1,0 +1,9 @@
+resources:
+  claim_code:
+    format: string
+    settable: true
+  data_in:
+    format: string
+  config_io:
+    format: string
+    settable: true
