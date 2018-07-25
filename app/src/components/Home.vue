@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="fill-height">
     <v-layout row>
-      <v-flex xs6>
+      <v-flex xs6 class="border-right">
         <div class="text-xs-right" style="margin-bottom: -16px">
           <v-btn color="accent" @click="claimDeviceDialog=true">
             <v-icon>add</v-icon>
@@ -42,7 +42,6 @@
           <div class="subtitle px-3" v-if="!loading && yourDevices.length === 0">
             You have no claimed devices. You can claim a device by clicking the button above.
           </div>
-          <v-divider v-else />
           <div class="text-xs-center ma-1" v-if="loading">
             <v-progress-circular indeterminate color="primary"/>
           </div>
@@ -166,6 +165,7 @@ export default {
 .active {
   background-color: #2C9DB639 !important;
 }
+
 .border-right {
   border-right: 1px solid rgba(0,0,0,0.12);
 }

@@ -167,6 +167,7 @@ export default {
   background-color: #777;
   color: white;
 }
+
 .border-right {
   border-right: 1px solid rgba(0,0,0,0.12);
 }
