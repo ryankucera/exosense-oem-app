@@ -47,7 +47,7 @@
           </div>
         </v-list>
       </v-flex>
-      <v-flex xs6 class="px-5">
+      <v-flex xs6 class="px-2">
         <DeviceDetail :device="selectedDevice" />
       </v-flex>
     </v-layout>

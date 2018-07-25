@@ -50,5 +50,6 @@ export default {
 .api-result {
   background-color: #222736;
   color: #efefef;
+  overflow-y: scroll;
 }
 </style>
