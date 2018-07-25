@@ -29,7 +29,7 @@ services: # Also applies for service configuration using .yaml format.
   include: '**/*.lua'
   exclude: ['*_test.lua', '*_spec.lua']
 
-  endpoints:
+endpoints:
   location: routes
   include: '**/*.lua'
   exclude: ['*_test.lua', '*_spec.lua']
