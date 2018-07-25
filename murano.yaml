@@ -1,4 +1,5 @@
----
+formatversion: 1.0.0
+
 info:
   name: ExosenseOEM
   summary: One line summary of
@@ -10,25 +11,26 @@ info:
     - 'exosite'
   version: 1.0.0
 
-endpoints:
-  location: routes
-  include: ['*.lua']
-  exclude: ['*_test.lua', '*_spec.lua', '**/.*']
+
 assets:
   location: app/dist
+  location: assets
   include: '**/*'
-  exclude: []
+  exclude: ['**/.*']
   default_page: index.html
+
 modules:
   location: modules
-  include: ['./*.lua', './src/*.lua']
-  exclude: ['*_test.lua', '*_spec.lua', '**test*.lua', '.*']
-services:
+  include: '**/*.lua'
+  exclude: ['*_test.lua', '*_spec.lua']
+
+services: # Also applies for service configuration using .yaml format.
   location: services
-  include: ['*.lua']
-  exclude: ['*_test.lua', '*_spec.lua', '**/.*']
+  include: '**/*.lua'
+  exclude: ['*_test.lua', '*_spec.lua']
 
-# The format version of this file. This is required.
-formatversion: 1.0.0
-
-# vim: set et sw=2 ts=2 :
+  endpoints:
+  location: routes
+  include: '**/*.lua'
+  exclude: ['*_test.lua', '*_spec.lua']
+  cors: {'origin': ['http://localhost:*']}
