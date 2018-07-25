@@ -1,3 +1,9 @@
+protocol:
+  name: onep
+
+provisioning:
+  auth_type: token
+
 resources:
   claim_code:
     allowed: []
