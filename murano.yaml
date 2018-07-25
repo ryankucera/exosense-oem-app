@@ -10,7 +10,7 @@ info:
     - 'exosite'
   version: 1.0.0
 
-routes:
+endpoints:
   location: routes
   include: ['*.lua']
   exclude: ['*_test.lua', '*_spec.lua', '**/.*']
